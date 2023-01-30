@@ -1,0 +1,31 @@
+{
+  "name": "movie-library-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "db:create": "sequelize db:drop && sequelize db:create",
+    "db:migrate": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/safrizalaji16/movie-library-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/safrizalaji16/movie-library-server/issues"
+  },
+  "homepage": "https://github.com/safrizalaji16/movie-library-server#readme",
+  "dependencies": {
+    "@apollo/server": "^4.3.2",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.3",
+    "graphql": "^16.6.0",
+    "jsonwebtoken": "^9.0.0",
+    "pg": "^8.9.0",
+    "sequelize": "^6.28.0"
+  }
+}
