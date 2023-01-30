@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: "is required",
+            msg: "Title is required",
           },
           notEmpty: {
-            msg: "is required",
+            msg: "Title is required",
           },
         },
       },
@@ -30,10 +30,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: "is required",
+            msg: "Synopsis is required",
           },
           notEmpty: {
-            msg: "is required",
+            msg: "Synopsis is required",
           },
         },
       },
@@ -42,10 +42,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: "is required",
+            msg: "Img url is required",
           },
           notEmpty: {
-            msg: "is required",
+            msg: "Img url is required",
           },
         },
       },
@@ -54,10 +54,10 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: {
           notNull: {
-            msg: "is required",
+            msg: "Author id is required",
           },
           notEmpty: {
-            msg: "is required",
+            msg: "Author id is required",
           },
         },
       },
