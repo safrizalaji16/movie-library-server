@@ -1,14 +1,14 @@
 const { Actor } = require("../models");
 
 class Controller {
-  static async addActor(_, args) {
+  static async addActor(_, args, context, info) {
     try {
       const { InputActor } = args;
       const newActor = await Actor.create(InputActor);
 
       return newActor;
     } catch (err) {
-      console.log(err);
+      context.next(err);
     }
   }
   static async readAllActors() {
@@ -17,37 +17,39 @@ class Controller {
 
       return actors;
     } catch (err) {
-      console.log(err);
+      context.next(err);
     }
   }
-  static async readOneActor(_, args) {
+  static async readOneActor(_, args, context, info) {
     try {
       const { id } = args;
+
+      console.log(context);
       const actor = await Actor.findByPk(id);
 
       return actor;
     } catch (err) {
-      console.log(err);
+      context.next(err);
     }
   }
-  static async editActor(_, args) {
+  static async editActor(_, args, context, info) {
     try {
       const { id, InputActor } = args;
       await Actor.update(InputActor, { where: { id } });
 
       return { msg: "Actor updated" };
     } catch (err) {
-      console.log(err);
+      context.next(err);
     }
   }
-  static async deleteActor(_, args) {
+  static async deleteActor(_, args, context, info) {
     try {
       const { id } = args;
       await Actor.destroy({ where: { id } });
 
       return { msg: "Actor deleted" };
     } catch (err) {
-      console.log(err);
+      context.next(err);
     }
   }
 }

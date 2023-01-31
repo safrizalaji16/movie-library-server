@@ -5,7 +5,17 @@ if (process.env.NODE_ENV !== "production") {
 const port = process.env.PORT || 4000;
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
-// const { errHandler } = require("./middlewares/errHandler");
+const express = require("express");
+const { expressMiddleware } = require("@apollo/server/express4");
+const {
+  ApolloServerPluginDrainHttpServer,
+} = require("@apollo/server/plugin/drainHttpServer");
+const http = require("http");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const app = express();
+const httpServer = http.createServer(app);
+const { errHandler } = require("./middlewares/errHandler");
 const {
   typeDefs: authorTypeDefs,
   resolvers: authorResolvers,
@@ -14,18 +24,48 @@ const {
   typeDefs: actorTypeDefs,
   resolvers: actorResolvers,
 } = require("./schemas/actor");
+const {
+  typeDefs: movieTypeDefs,
+  resolvers: movieResolvers,
+} = require("./schemas/movie");
+const {
+  typeDefs: movieActorTypeDefs,
+  resolvers: movieActorResolvers,
+} = require("./schemas/movieactor");
 
-const server = new ApolloServer({
-  typeDefs: [authorTypeDefs, actorTypeDefs],
-  resolvers: [authorResolvers, actorResolvers],
+async function startApolloServer() {
+  const server = new ApolloServer({
+    typeDefs: [
+      authorTypeDefs,
+      actorTypeDefs,
+      movieTypeDefs,
+      movieActorTypeDefs,
+    ],
+    resolvers: [
+      authorResolvers,
+      actorResolvers,
+      movieResolvers,
+      movieActorResolvers,
+    ],
+    plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
+    introspection: true,
+  });
+  await server.start();
 
-  introspection: true,
-});
+  app.use(
+    "/graphiql",
+    cors(),
+    bodyParser.json(),
+    expressMiddleware(server, {
+      context: async ({ req }) => ({ token: req.headers.token }),
+    })
+  );
 
-// server.express.use(errHandler);
+  app.use(errHandler);
 
-startStandaloneServer(server, {
-  listen: { port },
-}).then(({ url }) => {
-  console.log("Launching on port " + url);
-});
+  await new Promise((resolve) => httpServer.listen({ port }, resolve));
+  console.log(`🚀 Server ready at http://localhost:4000/graphiql`);
+  return { server, app };
+}
+
+startApolloServer();
