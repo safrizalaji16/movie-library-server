@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon app.js",
-    "db:create": "sequelize db:drop && sequelize db:create",
+    "db:create": "sequelize db:drop && sequelize db:create && touch .env",
     "db:migrate": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
   },
   "repository": {
