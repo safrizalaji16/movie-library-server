@@ -4,7 +4,6 @@ if (process.env.NODE_ENV !== "production") {
 
 const port = process.env.PORT || 4000;
 const { ApolloServer } = require("@apollo/server");
-const { startStandaloneServer } = require("@apollo/server/standalone");
 const express = require("express");
 const { expressMiddleware } = require("@apollo/server/express4");
 const {
@@ -15,7 +14,6 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const app = express();
 const httpServer = http.createServer(app);
-const { errHandler } = require("./middlewares/errHandler");
 const {
   typeDefs: authorTypeDefs,
   resolvers: authorResolvers,
@@ -57,11 +55,9 @@ async function startApolloServer() {
     cors(),
     bodyParser.json(),
     expressMiddleware(server, {
-      context: async ({ req }) => ({ token: req.headers.token }),
+      context: async ({ req, res }) => ({ req, res }),
     })
   );
-
-  app.use(errHandler);
 
   await new Promise((resolve) => httpServer.listen({ port }, resolve));
   console.log(`🚀 Server ready at http://localhost:4000/graphiql`);

@@ -1,14 +1,20 @@
 const { Actor } = require("../models");
+const { GraphQLError } = require("graphql");
 
 class Controller {
-  static async addActor(_, args, context, info) {
+  static async addActor(_, args) {
     try {
       const { InputActor } = args;
       const newActor = await Actor.create(InputActor);
 
       return newActor;
     } catch (err) {
-      context.next(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async readAllActors() {
@@ -17,39 +23,66 @@ class Controller {
 
       return actors;
     } catch (err) {
-      context.next(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
-  static async readOneActor(_, args, context, info) {
+  static async readOneActor(_, args) {
     try {
       const { id } = args;
-
-      console.log(context);
       const actor = await Actor.findByPk(id);
+
+      if (!actor) {
+        throw new GraphQLError("Actor Not Found", {
+          extensions: {
+            code: "NOT FOUND",
+            http: { status: 404 },
+          },
+        });
+      }
 
       return actor;
     } catch (err) {
-      context.next(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
-  static async editActor(_, args, context, info) {
+  static async editActor(_, args) {
     try {
       const { id, InputActor } = args;
       await Actor.update(InputActor, { where: { id } });
 
       return { msg: "Actor updated" };
     } catch (err) {
-      context.next(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
-  static async deleteActor(_, args, context, info) {
+  static async deleteActor(_, args) {
     try {
       const { id } = args;
       await Actor.destroy({ where: { id } });
 
       return { msg: "Actor deleted" };
     } catch (err) {
-      context.next(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
 }

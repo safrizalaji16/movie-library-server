@@ -1,4 +1,5 @@
 const { Movie } = require("../models");
+const { GraphQLError } = require("graphql");
 
 class Controller {
   static async addMovie(_, args) {
@@ -8,7 +9,12 @@ class Controller {
 
       return newMovie;
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async readAllMovies() {
@@ -17,7 +23,12 @@ class Controller {
 
       return movies;
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async readOneMovie(_, args) {
@@ -25,9 +36,23 @@ class Controller {
       const { id } = args;
       const movie = await Movie.findByPk(id);
 
+      if (!movie) {
+        throw new GraphQLError("Movie Not Found", {
+          extensions: {
+            code: "NOT FOUND",
+            http: { status: 404 },
+          },
+        });
+      }
+
       return movie;
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async editMovie(_, args) {
@@ -37,7 +62,12 @@ class Controller {
 
       return { msg: "Movie updated" };
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async deleteMovie(_, args) {
@@ -47,7 +77,12 @@ class Controller {
 
       return { msg: "Movie deleted" };
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
 }

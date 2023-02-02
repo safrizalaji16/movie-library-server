@@ -1,4 +1,5 @@
 const { MovieActor } = require("../models");
+const { GraphQLError } = require("graphql");
 
 class Controller {
   static async addMovieActor(_, args) {
@@ -8,7 +9,12 @@ class Controller {
 
       return newMovieActor;
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async readAllMovieActors() {
@@ -17,7 +23,12 @@ class Controller {
 
       return movieActors;
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async readOneMovieActor(_, args) {
@@ -25,9 +36,23 @@ class Controller {
       const { id } = args;
       const movieActor = await MovieActor.findByPk(id);
 
+      if (!movieActor) {
+        throw new GraphQLError("MovieActor Not Found", {
+          extensions: {
+            code: "NOT FOUND",
+            http: { status: 404 },
+          },
+        });
+      }
+
       return movieActor;
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async editMovieActor(_, args) {
@@ -37,7 +62,12 @@ class Controller {
 
       return { msg: "MovieActor updated" };
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
   static async deleteMovieActor(_, args) {
@@ -47,7 +77,12 @@ class Controller {
 
       return { msg: "MovieActor deleted" };
     } catch (err) {
-      console.log(err);
+      throw new GraphQLError("Internal Server Error", {
+        extensions: {
+          code: "INTERNAL SERVER ERROR",
+          http: { status: 500 },
+        },
+      });
     }
   }
 }
