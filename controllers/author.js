@@ -2,7 +2,6 @@ const { Author } = require("../models");
 const { GraphQLError } = require("graphql");
 
 class Controller {
-  static async loginActor() {}
   static async addAuthor(_, args) {
     try {
       const { InputAuthor } = args;
