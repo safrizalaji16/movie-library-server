@@ -55,7 +55,7 @@ async function startApolloServer() {
     cors(),
     bodyParser.json(),
     expressMiddleware(server, {
-      context: async ({ req, res }) => ({ req, res }),
+      context: async ({ req }) => req,
     })
   );
 
