@@ -22,10 +22,15 @@ const typeDefs = `#graphql
     email: String
     password: String
   }
+  
+  input EditAuthor {
+    name: String
+    email: String
+  }
 
   type Mutation{
     addAuthor( InputAuthor: InputAuthor ): Author
-    editAuthor(id: ID, InputAuthor: InputAuthor): Message
+    editAuthor(id: ID, InputAuthor: EditAuthor): Message
     deleteAuthor(id: ID): Message
   }
 `;

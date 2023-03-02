@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "NODE_ENV=development nodemon app.js",
+    "dev": "nodemon app.js",
     "start": "node app.js",
     "db:create": "sequelize db:drop && sequelize db:create && touch .env",
     "db:deploy": "railway run sequelize --env=production db:migrate:undo:all && railway run sequelize --env=production db:migrate && railway up",
