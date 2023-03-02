@@ -60,7 +60,7 @@ async function startApolloServer() {
   );
 
   await new Promise((resolve) => httpServer.listen({ port }, resolve));
-  console.log(`🚀 Server ready at http://localhost:4000/graphiql`);
+  console.log(`🚀 Server ready at http://localhost:${port}/graphiql`);
   return { server, app };
 }
 
